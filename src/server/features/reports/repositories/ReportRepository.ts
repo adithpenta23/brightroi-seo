@@ -190,6 +190,7 @@ async function getSharedReportByToken(token: string): Promise<{
   id: string;
   projectId: string;
   organizationId: string;
+  projectName: string;
   projectDomain: string | null;
   title: string;
   summary: string;
@@ -202,6 +203,7 @@ async function getSharedReportByToken(token: string): Promise<{
       id: reports.id,
       projectId: reports.projectId,
       organizationId: projects.organizationId,
+      projectName: projects.name,
       projectDomain: projects.domain,
       title: reports.title,
       summary: reports.summary,

@@ -7,6 +7,7 @@ import { ConfirmDialog } from "@/client/components/ConfirmDialog";
 import { BackLink, PageHeader } from "@/client/components/PageHeader";
 import { QueryState } from "@/client/components/QueryState";
 import { Button } from "@/client/components/ui/button";
+import { BRIGHTROI_MONTHLY_TEMPLATE } from "@/client/features/reports/brightroiMonthlyTemplate";
 import { ReportTemplateForm } from "@/client/features/reports/ReportTemplateForm";
 import { ReportTemplatesList } from "@/client/features/reports/ReportTemplatesList";
 import {
@@ -27,8 +28,12 @@ export const Route = createFileRoute("/_app/p/$projectId/reports/templates")({
 function ReportTemplatesPage() {
   const { projectId } = Route.useParams();
   const queryClient = useQueryClient();
-  // `{}` opens the form for a new template; `{ template }` opens it for an edit.
-  const [form, setForm] = useState<{ template?: ReportTemplate } | null>(null);
+  // `{}` opens the form for a new template; `{ template }` opens it for an
+  // edit; `{ draft }` opens a new one prefilled.
+  const [form, setForm] = useState<{
+    template?: ReportTemplate;
+    draft?: typeof BRIGHTROI_MONTHLY_TEMPLATE;
+  } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<ReportTemplate | null>(
     null,
   );
@@ -75,10 +80,18 @@ function ReportTemplatesPage() {
           title="Report templates"
           description="Reusable briefs your agents follow when they write a report: who it is for, which sections it has, and how it should sound."
           actions={
-            <Button onClick={() => setForm({})}>
-              <Plus data-icon="inline-start" />
-              New template
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setForm({ draft: BRIGHTROI_MONTHLY_TEMPLATE })}
+              >
+                Add {BRIGHTROI_MONTHLY_TEMPLATE.name}
+              </Button>
+              <Button onClick={() => setForm({})}>
+                <Plus data-icon="inline-start" />
+                New template
+              </Button>
+            </>
           }
         />
 
@@ -100,6 +113,7 @@ function ReportTemplatesPage() {
         <ReportTemplateForm
           projectId={projectId}
           template={form.template}
+          draft={form.draft}
           onClose={() => setForm(null)}
           onSaved={() => {
             setForm(null);

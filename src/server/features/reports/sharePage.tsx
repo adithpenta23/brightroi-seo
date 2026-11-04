@@ -1,3 +1,4 @@
+import { Parser } from "htmlparser2";
 import { renderToStaticMarkup } from "react-dom/server";
 import { formatRelativeTime } from "@/client/lib/relative-time";
 import { ReportRepository } from "@/server/features/reports/repositories/ReportRepository";
@@ -13,7 +14,7 @@ import { BRAND } from "@/shared/brand";
 // The public face of a shared report, `/s/<token>`: a slim bar and the
 // document in the same sandboxed frame the in-app viewer uses. Rendered to a
 // static string on the server rather than served as a React route, because the
-// reader is usually someone who has never opened OpenSEO: the app's root shell
+// reader is usually someone who has never opened the app: its root shell
 // renders only on the client, so a route inside it cost them the whole app
 // bundle (~400 KB gzipped) downloaded, parsed and hydrated before the frame
 // even existed. This page puts the frame in the first response and ships no
@@ -41,21 +42,50 @@ function shareDescription(summary: string): string {
     : line;
 }
 
-// The app's own light and dark palettes (app.css), so the bar matches the
-// product without loading its stylesheet. Dark follows the OS: an anonymous
-// reader has no stored preference.
+const MAX_PERIOD_CHARS = 80;
+
+/**
+ * The reporting period a report declares in its head, as
+ * `<meta name="report-period" content="1–31 October 2026">`. The BrightROI
+ * monthly template asks for it; reports without one show no period line.
+ * The head comes first, so the first 16 KB is enough and bounds the work.
+ */
+function reportPeriod(html: string): string | null {
+  let period: string | null = null;
+  const parser = new Parser({
+    onopentag(name, attributes) {
+      if (period !== null || name !== "meta") return;
+      if (attributes.name?.toLowerCase() !== "report-period") return;
+      const content = attributes.content?.trim();
+      if (content) period = content.slice(0, MAX_PERIOD_CHARS);
+    },
+  });
+  parser.end(html.slice(0, 16_384));
+  return period;
+}
+
+// BrightROI's light and dark palettes (src/client/styles/brand.css), so the bar
+// matches the portal without loading its stylesheet. Dark follows the OS: an
+// anonymous reader has no stored preference. Narrow screens put the logo and
+// buttons on one row and the client, title and period on the next.
 const STYLES = `
-:root{color-scheme:light dark;--bg:oklch(97% 0 0);--surface:oklch(100% 0 0);--border:oklch(92% 0 0);--text:oklch(20% 0 0);--muted:oklch(20% 0 0 / .5);--primary:oklch(50% 0.12 262);--primary-text:oklch(100% 0 0);--ghost-hover:oklch(20% 0 0 / .08)}
-@media (prefers-color-scheme:dark){:root{--bg:oklch(12% 0 0);--surface:oklch(18% 0 0);--border:oklch(27% 0 0);--text:oklch(92% 0 0);--muted:oklch(92% 0 0 / .5);--primary:oklch(66% 0.12 262);--ghost-hover:oklch(92% 0 0 / .1)}}
+@font-face{font-family:Inter;font-style:normal;font-display:swap;font-weight:100 900;src:url("/brand/fonts/inter-latin-wght-normal.woff2") format("woff2")}
+:root{color-scheme:light dark;--bg:#f8fafc;--surface:#fff;--border:#e2e8f0;--text:#0b1220;--muted:#475569;--accent:#2563eb;--primary:#2563eb;--primary-text:#fff;--ghost-hover:rgb(11 18 32 / 8%)}
+@media (prefers-color-scheme:dark){:root{--bg:#071329;--surface:#0e1e3b;--border:#2a3f66;--text:#f8fafc;--muted:#a9b8d0;--accent:#60a5fa;--primary:#60a5fa;--primary-text:#071329;--ghost-hover:rgb(248 250 252 / 10%)}}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font:14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--border)}
-.title{width:100%;min-width:0}
-@media (min-width:640px){.title{width:auto;flex:1}}
-h1{margin:0;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border)}
+.brand{order:1;display:flex;flex-shrink:0}
+.brand img{display:block;height:26px;width:auto}
+.title{order:3;width:100%;min-width:0}
+@media (min-width:768px){.title{order:2;width:auto;flex:1;padding-left:16px;border-left:1px solid var(--border)}}
+.client{margin:0;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+h1{margin:0;font-size:15px;font-weight:600;line-height:1.35}
+@media (min-width:768px){h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .meta{margin:0;font-size:12px;color:var(--muted)}
-.actions{display:flex;flex-shrink:0;align-items:center;gap:8px}
+.actions{order:2;margin-left:auto;display:flex;flex-shrink:0;align-items:center;gap:8px}
+@media (min-width:768px){.actions{order:3;margin-left:0}}
 .btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid transparent;border-radius:6px;font:inherit;font-weight:600;color:inherit;background:transparent;cursor:pointer;text-decoration:none}
 .btn:hover{background:var(--ghost-hover)}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:var(--primary-text)}
@@ -65,6 +95,7 @@ iframe{flex:1;min-height:0;width:100%;border:0;background:var(--surface)}
 main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
 main h1{white-space:normal;font-size:18px}
 main p{max-width:28rem;margin:0;color:var(--muted)}
+main .brand img{height:32px;margin-bottom:8px}
 `;
 
 // Share sheet on touch devices; the clipboard elsewhere (desktop macOS anchors
@@ -90,6 +121,20 @@ function TryButton() {
       rel="noreferrer"
     >
       Visit {BRAND.companyName}
+    </a>
+  );
+}
+
+function BrandLogo() {
+  return (
+    <a className="brand" href={MARKETING_URL} target="_blank" rel="noreferrer">
+      <picture>
+        <source
+          srcSet={BRAND.logo.fullOnDark}
+          media="(prefers-color-scheme: dark)"
+        />
+        <img src={BRAND.logo.fullOnLight} alt={BRAND.companyName} />
+      </picture>
     </a>
   );
 }
@@ -143,6 +188,7 @@ function unavailable(heading: string, detail: string): Response {
   return htmlResponse(
     <Document title="Report unavailable">
       <main>
+        <BrandLogo />
         <h1>{heading}</h1>
         <p>{detail}</p>
         <TryButton />
@@ -179,6 +225,15 @@ export async function renderSharePage(
     );
   }
 
+  const html = await ReportRepository.getReportHtml(
+    report.projectId,
+    report.id,
+  );
+  if (html === null) return missing();
+  const period = reportPeriod(html);
+  // The client's business name leads the preview, so a Slack channel that
+  // gets several reports can tell them apart.
+  const previewTitle = `${report.projectName} · ${report.title}`;
   const description = shareDescription(report.summary);
   const canonical = `${new URL(request.url).origin}${sharePath(token)}`;
   const domain = domainField.safeParse(report.projectDomain);
@@ -187,18 +242,19 @@ export async function renderSharePage(
   const imageVersion = new URLSearchParams({
     v: report.updatedAt,
     domain: domain.success ? domain.data : "",
+    name: report.projectName,
   });
   const imageUrl = `${canonical}/og.png?${imageVersion}`;
 
   return htmlResponse(
     <Document
-      title={report.title}
+      title={previewTitle}
       head={
         <>
           <meta property="og:type" content="article" />
           <meta property="og:site_name" content={BRAND.companyName} />
-          <meta property="og:title" content={report.title} />
-          <meta name="twitter:title" content={report.title} />
+          <meta property="og:title" content={previewTitle} />
+          <meta name="twitter:title" content={previewTitle} />
           {description ? (
             <>
               <meta property="og:description" content={description} />
@@ -211,22 +267,24 @@ export async function renderSharePage(
           <meta property="og:image:height" content="630" />
           <meta
             property="og:image:alt"
-            content={`${report.title} · ${BRAND.companyName}`}
+            content={`${previewTitle} · ${BRAND.companyName}`}
           />
           <meta name="twitter:image" content={imageUrl} />
           <meta
             name="twitter:image:alt"
-            content={`${report.title} · ${BRAND.companyName}`}
+            content={`${previewTitle} · ${BRAND.companyName}`}
           />
           <meta name="twitter:card" content="summary_large_image" />
         </>
       }
     >
       <header>
+        <BrandLogo />
         <div className="title">
+          <p className="client">{report.projectName}</p>
           <h1>{report.title}</h1>
           <p className="meta">
-            Prepared by {BRAND.companyName} · Updated{" "}
+            {period ? `Reporting period: ${period} · ` : ""}Updated{" "}
             {formatRelativeTime(report.updatedAt)}
           </p>
         </div>

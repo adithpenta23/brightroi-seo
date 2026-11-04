@@ -8,11 +8,15 @@ const mocks = vi.hoisted(() => ({
     AUTH_MODE: "hosted" as string | undefined,
   },
   getSharedReportByToken: vi.fn(),
+  getReportHtml: vi.fn(),
 }));
 
 vi.mock("cloudflare:workers", () => ({ env: mocks.env }));
 vi.mock("@/server/features/reports/repositories/ReportRepository", () => ({
-  ReportRepository: { getSharedReportByToken: mocks.getSharedReportByToken },
+  ReportRepository: {
+    getSharedReportByToken: mocks.getSharedReportByToken,
+    getReportHtml: mocks.getReportHtml,
+  },
 }));
 
 const TOKEN = "a".repeat(32);
@@ -21,6 +25,9 @@ const request = () => new Request(`https://app.example.com/s/${TOKEN}`);
 // Only what the page reads off the row. The title and summary carry the
 // characters that must not reach the HTML unescaped.
 const SHARED_REPORT = {
+  id: "report_1",
+  projectId: "project_1",
+  projectName: "Bad SEO Co",
   title: "badseo.dev <SEO> audit",
   summary: '\nFix the "titles" first.\n\nThen the meta descriptions.',
   updatedAt: "2026-09-01T10:00:00.000Z",
@@ -31,6 +38,7 @@ const SHARED_REPORT = {
 beforeEach(() => {
   mocks.env.AUTH_MODE = "hosted";
   mocks.getSharedReportByToken.mockResolvedValue(SHARED_REPORT);
+  mocks.getReportHtml.mockResolvedValue("<!doctype html><html></html>");
 });
 
 describe("renderSharePage", () => {
@@ -47,7 +55,7 @@ describe("renderSharePage", () => {
       `<iframe src="/s/${TOKEN}/raw" sandbox="${REPORT_IFRAME_SANDBOX}"`,
     );
     expect(html).toContain(
-      "<title>badseo.dev &lt;SEO&gt; audit · BrightROI</title>",
+      "<title>Bad SEO Co · badseo.dev &lt;SEO&gt; audit · BrightROI</title>",
     );
     expect(html).toContain(
       '<meta property="og:description" content="Fix the &quot;titles&quot; first."/>',
@@ -57,17 +65,30 @@ describe("renderSharePage", () => {
     );
     expect(html).toContain('<meta name="robots" content="noindex, nofollow"/>');
     const $ = load(html);
-    const imageUrl = `https://app.example.com/s/${TOKEN}/og.png?v=2026-09-01T10%3A00%3A00.000Z&domain=badseo.dev`;
+    const imageUrl = `https://app.example.com/s/${TOKEN}/og.png?v=2026-09-01T10%3A00%3A00.000Z&domain=badseo.dev&name=Bad+SEO+Co`;
     expect($('meta[property="og:image"]').attr("content")).toBe(imageUrl);
     expect($('meta[name="twitter:image"]').attr("content")).toBe(imageUrl);
     expect($('meta[property="og:image:alt"]').attr("content")).toBe(
-      `${SHARED_REPORT.title} · BrightROI`,
+      `Bad SEO Co · ${SHARED_REPORT.title} · BrightROI`,
     );
     expect($('meta[name="twitter:image:alt"]').attr("content")).toBe(
-      `${SHARED_REPORT.title} · BrightROI`,
+      `Bad SEO Co · ${SHARED_REPORT.title} · BrightROI`,
     );
     // No app bundle: the reader has never signed in and needs none of it.
     expect(html).not.toContain("/assets/");
+  });
+
+  it("shows the client's name and the period the report declares", async () => {
+    mocks.getReportHtml.mockResolvedValue(
+      '<!doctype html><html><head><meta name="report-period" content="1–31 October 2026"></head></html>',
+    );
+
+    const $ = load(await (await renderSharePage(TOKEN, request())).text());
+
+    expect($("header .client").text()).toBe("Bad SEO Co");
+    expect($("header .meta").text()).toMatch(
+      /^Reporting period: 1–31 October 2026 · Updated /,
+    );
   });
 
   // The reader is told the project is archived; the report's own title is

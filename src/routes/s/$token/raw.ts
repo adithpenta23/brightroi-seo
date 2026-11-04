@@ -6,7 +6,7 @@ import {
   sharesEnabled,
 } from "@/server/features/reports/shareAccess";
 import { captureServerEvent } from "@/server/lib/posthog";
-import { createReportMapGrants } from "@/server/features/reports/reportMapGrant";
+
 import { reportDocumentResponse, textResponse } from "@/shared/report-sandbox";
 import { sharePath } from "@/shared/report-share";
 
@@ -73,7 +73,7 @@ async function handleSharedReportRequest(
   if (!report || report.archived) return notShared();
 
   // The document is only ever reachable inside the wrapper page's frame, so
-  // shared content always carries OpenSEO's chrome; there is no print mode
+  // shared content always carries the portal's chrome; there is no print mode
   // here, because a cancelled print dialog would leave a bare report open
   // top-level on the app domain. Members print from the app. The redirect
   // needs the header to say the request is top-level: a client that sends no
@@ -118,7 +118,10 @@ async function handleSharedReportRequest(
   return reportDocumentResponse(html, {
     cacheControl: EDGE_CACHE_CONTROL,
     noindex: true,
-    mapGrants: await createReportMapGrants(html),
+    // BrightROI: no map grants on a shared link, so a client opening it never
+    // spends Google Map Tiles calls. Rank grids keep their static drawing;
+    // members still get the live map at /r/<reportId>.
+    mapGrants: [],
   });
 }
 

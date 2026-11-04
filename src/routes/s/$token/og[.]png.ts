@@ -23,7 +23,11 @@ export async function handleReportSocialImage(
   try {
     const { renderReportSocialImage } =
       await import("@/server/features/reports/reportSocialImage");
-    return await renderReportSocialImage(report.title, report.projectDomain);
+    return await renderReportSocialImage(
+      report.title,
+      report.projectDomain,
+      report.projectName,
+    );
   } catch (error) {
     console.error("Report social image rendering failed", error);
     return new Response(null, {

@@ -104,6 +104,65 @@ Without the key, the app stops before contacting DataForSEO, so nothing is
 charged. Every page also shows a "Setup needed" banner and a DataForSEO pop-up
 until the key is set.
 
+## Client reports
+
+Clients never sign in. BrightROI keeps one organization with one project per
+client, and sends each client a link to their report in Slack.
+
+### Set up a client
+
+1. Create a project named after the client's business, written the way the
+   client should see it ("Smith Plumbing"). The name is printed on the shared
+   report and in its Slack preview, so keep internal notes out of it.
+2. Open **Reports → Templates** in that project, click **Add BrightROI monthly
+   report**, then **Create template**. Do this once per client.
+
+### Write the monthly report
+
+Reports are written by an AI agent connected to the portal: Claude Code (see
+**Agent setup** in the sidebar), or SAM inside the portal once
+`OPENROUTER_API_KEY` is set. Ask, for example:
+
+> Write the BrightROI monthly report for the Smith Plumbing project for
+> October 2026.
+
+The template covers local map rankings, keyword rankings, Google Search
+Console, Google Analytics, the site audit and AI search. A section with no data
+gets a short friendly line instead of numbers, and errors from data providers
+are never shown. Read the report in **Reports** before sharing it.
+
+### Share, copy and revoke a link
+
+- **Share:** open the report, click **Share** and turn on **Public link**.
+- **Copy:** click **Copy link** and paste it in the client's Slack channel.
+  Anyone with the link can read that one report, without signing in.
+- **Update:** saving the report again keeps the same link; the client sees the
+  latest version.
+- **Revoke:** click **Share** and turn **Public link** off. The link stops
+  working straight away. Turning it on again creates a new link, and the old one
+  stays dead.
+
+A link opens only its own report. It never shows other reports, the project's
+other data or the portal itself. Shared pages are hidden from search engines,
+and opening one makes no paid API calls: a local map grid shows as a drawing
+rather than a live Google map.
+
+### What the Slack preview shows
+
+Slack shows "BrightROI", the client's business name and the report title, the
+first sentence of the report's summary, and a picture with the BrightROI logo,
+the client's name, the report title and the client's website. Everyone in the
+channel can see the preview and open the link. Slack keeps a preview once it is
+posted, so revoking the link stops the report opening but does not remove the
+preview text already in the channel; delete the Slack message too if that
+matters. Previews only work once the portal is online at its public address.
+
+### PDF
+
+On the report's page in the portal, click **Export PDF**. The browser's print
+window opens; choose **Save as PDF**. The shared link has no PDF button, so send
+the PDF yourself when a client asks for one.
+
 ## Branding
 
 Everything BrightROI-specific lives in a few files, so upstream updates rarely
@@ -151,6 +210,11 @@ foreach ($d in @("$env:LOCALAPPDATA\Docker\run", "$env:LOCALAPPDATA\docker-secre
 
 On this PC it happens after every restart, so run it before starting Docker
 Desktop. The renamed folders hold only empty files and are safe to keep.
+
+**Site audits stall after a PC restart.** Docker Desktop brings back most
+containers but not always `crawl-gateway`, which audits need. Run the start
+command from "Start, stop and check" (`up -d` without `--build`) after every
+restart; it starts whatever is missing.
 
 **502 Bad Gateway after a rebuild.** `up -d --build` replaces the app
 container but leaves the `web` proxy running, and the proxy keeps sending

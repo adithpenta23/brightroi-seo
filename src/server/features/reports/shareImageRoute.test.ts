@@ -24,6 +24,7 @@ beforeEach(() => {
   mocks.sharesEnabled.mockResolvedValue(true);
   mocks.getSharedReportByToken.mockResolvedValue({
     title: "Acme SEO audit",
+    projectName: "Acme Plumbing",
     projectDomain: "acme.com",
     archived: false,
   });
@@ -37,6 +38,7 @@ describe("report social image access", () => {
     expect(mocks.renderReportSocialImage).toHaveBeenCalledWith(
       "Acme SEO audit",
       "acme.com",
+      "Acme Plumbing",
     );
     expect(await response.text()).toBe("image");
   });

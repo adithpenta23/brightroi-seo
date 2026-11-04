@@ -38,12 +38,15 @@ Accent: #1C4ED8`;
 export function ReportTemplateForm({
   projectId,
   template,
+  draft,
   onClose,
   onSaved,
 }: {
   projectId: string;
   /** The template being edited, or undefined when creating one. */
   template?: ReportTemplate;
+  /** Starting values for a new template. */
+  draft?: Pick<ReportTemplate, "name" | "description" | "instructions">;
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -71,9 +74,9 @@ export function ReportTemplateForm({
 
   const form = useAppForm({
     defaultValues: {
-      name: template?.name ?? "",
-      description: template?.description ?? "",
-      instructions: template?.instructions ?? "",
+      name: template?.name ?? draft?.name ?? "",
+      description: template?.description ?? draft?.description ?? "",
+      instructions: template?.instructions ?? draft?.instructions ?? "",
     },
     validationLogic: revalidateLogic(),
     validators: { onDynamic: formSchema },

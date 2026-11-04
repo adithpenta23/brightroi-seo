@@ -1,12 +1,13 @@
 import { ImageResponse } from "takumi-js/response";
 import { domainField } from "@/types/schemas/domain";
-import logo from "../../../public/brand/icon-192.png?inline";
+import logo from "../../../public/brand/logo-on-light.png?inline";
 import { BRAND } from "@/shared/brand";
 
 /** One template for all reports. Assets stay local; titles never go to an image service. */
 export async function renderReportSocialImage(
   title: string,
   projectDomain?: string | null,
+  projectName?: string,
 ): Promise<Response> {
   // Projects normally store a bare domain. Also handle older full URLs, and
   // omit missing/invalid websites rather than failing an otherwise valid card.
@@ -24,20 +25,31 @@ export async function renderReportSocialImage(
         color: "#0b1220",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <img src={logo} width={64} height={64} />
-        <div style={{ fontSize: 34, fontWeight: 600, letterSpacing: -1 }}>
-          {BRAND.companyName}
-        </div>
-      </div>
+      <img src={logo} width={219} height={64} alt={BRAND.companyName} />
       <div
         style={{
           display: "flex",
           flex: 1,
-          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "center",
           paddingTop: 24,
         }}
       >
+        {projectName ? (
+          <div
+            style={{
+              fontSize: 32,
+              fontWeight: 600,
+              color: "#2563eb",
+              marginBottom: 16,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {projectName}
+          </div>
+        ) : null}
         <div
           style={{
             fontSize: title.length > 85 ? 54 : title.length > 48 ? 64 : 80,
@@ -68,6 +80,16 @@ export async function renderReportSocialImage(
           {domain.data}
         </div>
       )}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 12,
+          backgroundColor: "#2563eb",
+        }}
+      />
     </div>,
     {
       width: 1200,
