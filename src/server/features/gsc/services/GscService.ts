@@ -18,6 +18,7 @@ import {
   GscNotConnectedError,
   GscTokenError,
 } from "@/server/lib/gscErrors";
+import { BRAND } from "@/shared/brand";
 export { GscNotConnectedError } from "@/server/lib/gscErrors";
 import {
   buildSearchAnalyticsRequest,
@@ -181,7 +182,7 @@ async function setSite(input: {
   if (!grants.some((grant) => grant.accountId === input.accountId)) {
     throw new AppError(
       "NOT_FOUND",
-      "That Google account isn't connected to your OpenSEO account.",
+      `That Google account isn't connected to your ${BRAND.productName} account.`,
     );
   }
 

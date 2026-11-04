@@ -30,6 +30,7 @@ import {
   toAuthCallbackURL,
 } from "@/lib/auth-redirect";
 import { z } from "zod";
+import { BRAND } from "@/shared/brand";
 
 const UTM_PARAMS = [
   "utm_source",
@@ -132,7 +133,7 @@ function SignUpPage() {
           );
         }
         const result = await authClient.signUp.email({
-          name: email.split("@")[0] || "OpenSEO User",
+          name: email.split("@")[0] || `${BRAND.companyName} User`,
           email,
           password: value.password,
           callbackURL: verificationCallbackURL.toString(),

@@ -4,6 +4,7 @@ import {
   helpLinkClassName,
   SecretHelpPage,
 } from "@/client/features/help/SecretHelpPage";
+import { BRAND } from "@/shared/brand";
 
 const OPENROUTER_KEYS_URL = "https://openrouter.ai/settings/keys";
 
@@ -45,9 +46,9 @@ function OpenrouterApiKeyHelpPage() {
       title="Set up your OpenRouter API key"
       intro={
         <>
-          OpenSEO needs the <code>OPENROUTER_API_KEY</code> secret before AI
-          features like SAM, the in-app SEO agent, can run. It is optional —
-          everything else in OpenSEO works without it.
+          {BRAND.productName} needs the <code>OPENROUTER_API_KEY</code> secret
+          before AI features like SAM, the in-app SEO agent, can run. It is
+          optional — everything else in {BRAND.productName} works without it.
         </>
       }
       everyAppIntro="SAM, prompt suggestions and website research run on OpenRouter. On Every App the gateway holds the key once, for every app."
@@ -69,7 +70,7 @@ function OpenrouterApiKeyHelpPage() {
               </li>
             </ul>
           </li>
-          <li>Restart OpenSEO.</li>
+          <li>Restart {BRAND.productName}.</li>
         </>
       }
       everyAppSteps={

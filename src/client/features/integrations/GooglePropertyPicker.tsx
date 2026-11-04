@@ -18,8 +18,9 @@ import { GSC_SELF_HOSTED_SETUP_DOCS_URL } from "@/shared/gsc";
 import { useState, type ReactNode } from "react";
 import { Plus } from "lucide-react";
 
+// Google's own guide to adding a property to Search Console.
 const GSC_SETUP_GUIDE_URL =
-  "https://openseo.so/blogs/google-search-console-setup";
+  "https://support.google.com/webmasters/answer/34592";
 
 export type GooglePickerSelection = { accountId: string; propertyId: string };
 type Property = {

@@ -6,6 +6,7 @@ import {
   AlertTitle,
 } from "@/client/components/ui/alert";
 import { isEveryAppClientAuthMode } from "@/lib/auth-mode";
+import { BRAND } from "@/shared/brand";
 
 const EVERY_APP_GOOGLE_SETUP_URL =
   "https://everyapp.com/docs/providers/google#connect-accounts";
@@ -54,8 +55,8 @@ export function GoogleOAuthSetupWarning({
       <AlertTitle>Google OAuth client not configured</AlertTitle>
       <AlertDescription>
         <p>
-          Add your Google client ID and secret to this OpenSEO deployment before
-          connecting {integrationName}.
+          Add your Google client ID and secret to this {BRAND.productName}{" "}
+          deployment before connecting {integrationName}.
         </p>
         <SafeExternalLink
           url={docsUrl}

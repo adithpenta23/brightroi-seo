@@ -6,6 +6,7 @@ import { buildCacheKey, getCached, setCached } from "@/server/lib/r2-cache";
 import type { ToolAuthContext } from "@/server/mcp/context";
 import { mcpResponse } from "@/server/mcp/formatters";
 import { widgetSnapshotSchema, WidgetTool } from "@/shared/mcp-contracts";
+import { BRAND } from "@/shared/brand";
 
 const RESULT_TTL_SECONDS = 60 * 60;
 type ResultAuth = Pick<ToolAuthContext, "organizationId" | "userId">;
@@ -88,7 +89,7 @@ export async function displayWidgetResult(
     );
   }
   const result = mcpResponse({
-    text: "Showing the saved OpenSEO results.",
+    text: `Showing the saved ${BRAND.productName} results.`,
     meta: { projectId: args.projectId },
     structuredContent: { displayed: true, resultId: args.resultId },
   });

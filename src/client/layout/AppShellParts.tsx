@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/client/components/ui/dialog";
+import { BRAND } from "@/shared/brand";
 
 function SeoApiStatusBanners({
   shouldShowSeoApiWarning,
@@ -43,8 +44,9 @@ function SeoApiStatusBanners({
             </>
           ) : (
             <>
-              Setup needed: add your DataForSEO API key to use OpenSEO features.
-              See the quick steps on the {helpLink}.
+              Setup needed: add your DataForSEO API key to use{" "}
+              {BRAND.productName} features. See the quick steps on the{" "}
+              {helpLink}.
             </>
           )}
         </AppBanner>
@@ -125,7 +127,7 @@ function MissingSeoSetupModal({ onClose }: { onClose: () => void }) {
                   setup guide has the steps.
                 </>
               ) : (
-                "Add your DataForSEO API key to start using OpenSEO."
+                `Add your DataForSEO API key to start using ${BRAND.productName}.`
               )}
             </DialogDescription>
           </div>

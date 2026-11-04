@@ -1,0 +1,86 @@
+/* BrightROI Portal colours and type, from brightroi.co and brand-assets/.
+   These override the upstream theme tokens in app.css. The selectors carry
+   `html` so they outrank app.css's own theme blocks wherever this file lands
+   in the bundle. The theme keys stay "openseo" and "openseo-dark" (see
+   src/client/lib/theme.ts). Status colours (destructive, success, warning,
+   info) and chart colours 2-5 are left as upstream set them. */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/brand/fonts/inter-latin-wght-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@theme {
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root,
+html[data-theme="openseo"] {
+  --background: #eef2f7;
+  --foreground: #0b1220;
+  --card: #ffffff;
+  --card-foreground: #0b1220;
+  --popover: #ffffff;
+  --popover-foreground: #0b1220;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0b1220;
+  --muted: #f8fafc;
+  --muted-foreground: #475569;
+  --accent: #f1f5f9;
+  --accent-foreground: #0b1220;
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --ring: #2563eb;
+  --chart-1: #2563eb;
+  --sidebar: #e2e8f0;
+  --sidebar-foreground: #0b1220;
+  --sidebar-primary: #2563eb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgb(11 18 32 / 8%);
+  --sidebar-accent-foreground: #0b1220;
+  --sidebar-border: #cbd5e1;
+  --sidebar-ring: #2563eb;
+}
+
+/* Links use the primary colour too, and no blue carries white button text
+   and also reads as link text on navy. A lighter blue with navy button
+   text passes both (7.3:1). */
+html[data-theme="openseo-dark"] {
+  --background: #071329;
+  --foreground: #f8fafc;
+  --card: #0e1e3b;
+  --card-foreground: #f8fafc;
+  --popover: #13264a;
+  --popover-foreground: #f8fafc;
+  --primary: #60a5fa;
+  --primary-foreground: #071329;
+  --secondary: #172b52;
+  --secondary-foreground: #f8fafc;
+  --muted: #071329;
+  --muted-foreground: #a9b8d0;
+  --accent: #172b52;
+  --accent-foreground: #f8fafc;
+  --border: #2a3f66;
+  --input: #3b5179;
+  --ring: #60a5fa;
+  --chart-1: #60a5fa;
+  --sidebar: #0e1e3b;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #60a5fa;
+  --sidebar-primary-foreground: #071329;
+  --sidebar-accent: rgb(248 250 252 / 8%);
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #2a3f66;
+  --sidebar-ring: #60a5fa;
+}

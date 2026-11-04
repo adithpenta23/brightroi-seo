@@ -90,7 +90,7 @@ export async function estimateCost(
     warnings: [
       hosted
         ? "Customer cost uses OpenSEO data credits, including the service markup."
-        : "Self-hosted: cost estimates your own DataForSEO account charges. OpenSEO credits are not used.",
+        : "Self-hosted: cost estimates your own DataForSEO account charges. No credits are used.",
       `One fresh answer per prompt and engine. The ${scheduleInterval} estimate assumes ${checksPerMonth} ${checksPerMonth === 1 ? "check" : "checks"} per month.`,
       ...(liveEngines.length
         ? [

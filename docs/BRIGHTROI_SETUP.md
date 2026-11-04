@@ -104,6 +104,33 @@ Without the key, the app stops before contacting DataForSEO, so nothing is
 charged. Every page also shows a "Setup needed" banner and a DataForSEO pop-up
 until the key is set.
 
+## Branding
+
+Everything BrightROI-specific lives in a few files, so upstream updates rarely
+touch it:
+
+| What                                                                      | Where                                                                                            |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Product name, tagline, support email, website, setup-guide links, crawler | `src/shared/brand.ts`                                                                            |
+| Colours and font, light and dark theme                                    | `src/client/styles/brand.css` (loaded by `app.css`)                                              |
+| Logos and the link-preview fallback card                                  | `src/public/brand/`                                                                              |
+| Browser and home-screen icons                                             | `src/public/favicon*`, `apple-touch-icon.png`, `android-chrome-*.png` (upstream names, replaced) |
+| Inter font and its licence                                                | `src/public/brand/fonts/`                                                                        |
+| Source logo files                                                         | `brand-assets/`                                                                                  |
+
+To change the logo, replace the files in `brand-assets/` (same names), then
+regenerate the icons and logos. This needs Python 3 with Pillow
+(`pip install pillow`):
+
+```bash
+python scripts/brightroi/make_brand_images.py
+```
+
+The site audit crawler identifies itself as `BrightROI-Audit/1.0`. A client
+site that blocks bots must allow that user agent for audits to see every page.
+
+When an upstream update conflicts with these files, keep the BrightROI version.
+
 ## Setup notes and fixes
 
 Problems met while setting this up on Windows, and what fixed them.
@@ -124,6 +151,14 @@ foreach ($d in @("$env:LOCALAPPDATA\Docker\run", "$env:LOCALAPPDATA\docker-secre
 
 On this PC it happens after every restart, so run it before starting Docker
 Desktop. The renamed folders hold only empty files and are safe to keep.
+
+**502 Bad Gateway after a rebuild.** `up -d --build` replaces the app
+container but leaves the `web` proxy running, and the proxy keeps sending
+requests to the old container's address. Restart the proxy:
+
+```bash
+docker compose -f deploy/standalone/compose.yaml restart web
+```
 
 **`COMPOSE_FILE` uses a different separator on Windows.** The upstream docs
 join two Compose files with `:`, which works on Linux and macOS. On Windows the

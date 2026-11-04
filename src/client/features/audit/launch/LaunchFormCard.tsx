@@ -30,6 +30,7 @@ import {
 import { PAID_MAX_AUDIT_PAGES } from "@/shared/audit-limits";
 import { renderingEstimateText } from "@/shared/audit-rendering";
 import { SUBSCRIBE_ROUTE } from "@/shared/billing";
+import { BRAND } from "@/shared/brand";
 
 type Props = {
   launchForm: ReturnType<typeof useLaunchController>["launchForm"];
@@ -255,15 +256,8 @@ function RenderingOptions({
       {canRenderJavaScript === false && !isEveryAppClientAuthMode() && (
         <FieldDescription>
           This deployment has no browser, so rendering needs a Context.dev API
-          key. Set <code>CONTEXT_API_KEY</code>, restart OpenSEO, then reload
-          this page.{" "}
-          <a
-            href="https://github.com/every-app/open-seo/blob/main/docs/SELF_HOSTING_CLOUDFLARE_OPERATIONS.md#render-javascript-in-site-audits"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Setup guide
-          </a>
+          key. Set <code>CONTEXT_API_KEY</code>, restart {BRAND.productName},
+          then reload this page.
         </FieldDescription>
       )}
     </Field>

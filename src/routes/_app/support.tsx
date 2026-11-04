@@ -9,9 +9,7 @@ import {
   CardTitle,
 } from "@/client/components/ui/card";
 import { SUPPORT_EMAIL } from "@/client/lib/support";
-
-const DISCORD_URL = "https://discord.gg/c9uGs3cFXr";
-const GITHUB_URL = "https://github.com/every-app/open-seo";
+import { BRAND } from "@/shared/brand";
 
 export const Route = createFileRoute("/_app/support")({
   component: SupportPage,
@@ -23,11 +21,11 @@ function SupportPage() {
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="space-y-1">
           <p className="text-sm font-medium text-muted-foreground">
-            Help & Community
+            Help & Support
           </p>
           <PageHeader
-            title="We want to hear from you"
-            description="We want to talk to you! We're super open to feedback and want to learn how you work so we can make OpenSEO better."
+            title={`Questions about ${BRAND.productName}?`}
+            description={`Ask the ${BRAND.companyName} team about problems, access or ideas for the portal.`}
           />
         </div>
 
@@ -52,17 +50,10 @@ function SupportPage() {
           </Card>
 
           <SupportLinkCard
-            href={DISCORD_URL}
-            title="Discord"
-            description="Ask for help, share ideas and learn from the community."
-            cta="Join the Discord"
-          />
-
-          <SupportLinkCard
-            href={`${GITHUB_URL}/issues`}
-            title="GitHub Issues"
-            description="Report bugs or request features on GitHub."
-            cta="Open an issue"
+            href={BRAND.contactUrl}
+            title={BRAND.companyName}
+            description={BRAND.tagline}
+            cta={`Contact ${BRAND.companyName}`}
           />
         </div>
       </div>

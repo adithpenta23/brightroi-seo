@@ -34,6 +34,7 @@ import { normalizeClientRegistrationRequest } from "@/server/mcp/oauth-registrat
 import { getPublicOrigin } from "@/server/mcp/public-origin";
 import { resolveHostedContext } from "@/middleware/ensure-user/hosted";
 import { handleMcpApiKeyRequest } from "@/server/mcp/api-key-auth";
+import { BRAND } from "@/shared/brand";
 
 const OAUTH_TOKEN_PATH = "/api/auth/oauth2/token";
 const OAUTH_REGISTER_PATH = "/api/auth/oauth2/register";
@@ -392,7 +393,7 @@ function createProvider(appFetch: AppFetch, resource: string) {
     resourceMetadata: {
       resource,
       scopes_supported: [MCP_SCOPE],
-      resource_name: "OpenSEO MCP",
+      resource_name: `${BRAND.productName} MCP`,
     },
     tokenExchangeCallback: ({ props, requestedScope }) => {
       if (!requestedScope.includes(MCP_SCOPE)) {

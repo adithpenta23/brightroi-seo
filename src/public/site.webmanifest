@@ -1,6 +1,6 @@
 {
-  "name": "OpenSEO",
-  "short_name": "OpenSEO",
+  "name": "BrightROI Portal",
+  "short_name": "BrightROI",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#0a0f0d",
-  "background_color": "#0a0f0d",
+  "theme_color": "#071329",
+  "background_color": "#071329",
   "display": "standalone"
 }

@@ -71,6 +71,9 @@ describe("auditRequestHeaders", () => {
       expiresAt: null,
     });
 
-    expect(headers).toEqual({ "User-Agent": "OpenSEO-Audit/1.0", ...shopify });
+    expect(headers).toEqual({
+      "User-Agent": "BrightROI-Audit/1.0",
+      ...shopify,
+    });
   });
 });

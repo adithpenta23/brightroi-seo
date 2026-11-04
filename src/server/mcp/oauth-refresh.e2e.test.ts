@@ -345,9 +345,7 @@ describe("Codex-style OAuth token refresh (real workers-oauth-provider)", () => 
       .extend({ error_description: z.string() })
       .parse(await expired.json());
     expect(body.error).toBe("invalid_grant");
-    expect(body.error_description).toContain(
-      "https://openseo.so/docs/agent-setup",
-    );
+    expect(body.error_description).toContain("approve the sign-in again");
   });
 
   it("resumes OAuth cleanup across grant and token pages, then resets the cursor", async () => {

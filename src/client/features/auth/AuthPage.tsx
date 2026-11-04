@@ -6,6 +6,7 @@ import {
 } from "@/lib/auth-redirect";
 import { isHostedClientAuthMode, usesBetterAuthClient } from "@/lib/auth-mode";
 import { PRIVACY_URL, TERMS_URL } from "@/shared/terms";
+import { BRAND } from "@/shared/brand";
 
 export const authRedirectSearchSchema = z.object({
   redirect: z.string().optional(),
@@ -147,8 +148,8 @@ export function AuthPageCard({
     <div className="w-full max-w-xs space-y-6">
       <div className="space-y-3 text-center">
         <img
-          src="/transparent-logo.png"
-          alt="OpenSEO"
+          src={BRAND.logo.icon}
+          alt={BRAND.productName}
           className="mx-auto size-10 rounded-lg"
         />
         <div>

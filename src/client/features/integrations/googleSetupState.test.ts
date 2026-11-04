@@ -166,7 +166,7 @@ describe("Search Console website setup guidance", () => {
       expect(html).toContain("We couldn’t find your website");
       expect(html).toContain("owner@example.com");
       expect(html).not.toContain("Choose property");
-      expect(html).toContain("/blogs/google-search-console-setup");
+      expect(html).toContain("support.google.com/webmasters/answer/34592");
       expect(html).toContain("Refresh");
       expect(html).toContain("Use a different Google account");
       if (surface === "onboarding") expect(html).toContain("Skip for now");

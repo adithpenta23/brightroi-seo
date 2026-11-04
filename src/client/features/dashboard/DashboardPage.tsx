@@ -34,7 +34,7 @@ import {
   getDashboardOverview,
 } from "@/serverFunctions/dashboard";
 import { Skeleton } from "@/client/components/ui/skeleton";
-import { usesBetterAuthClient } from "@/lib/auth-mode";
+import { isHostedClientAuthMode, usesBetterAuthClient } from "@/lib/auth-mode";
 
 export function DashboardPage({
   projectId,
@@ -202,7 +202,10 @@ export function DashboardPage({
             the step. */}
         {usesBetterAuthClient() && !activation.mcp.cardDismissed ? (
           !agentConnected ? (
-            <DashboardAgentCard projectId={projectId} />
+            // The one-click installs connect the hosted app, not this one.
+            isHostedClientAuthMode() ? (
+              <DashboardAgentCard projectId={projectId} />
+            ) : null
           ) : agentNeverUsed ? (
             <DashboardAgentPromptCard
               projectId={projectId}

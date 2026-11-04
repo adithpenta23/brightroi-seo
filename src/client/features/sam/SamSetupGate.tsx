@@ -4,6 +4,7 @@ import { GateCard } from "@/client/components/GateCard";
 import { Alert, AlertDescription } from "@/client/components/ui/alert";
 import { Button } from "@/client/components/ui/button";
 import { isEveryAppClientAuthMode } from "@/lib/auth-mode";
+import { BRAND } from "@/shared/brand";
 
 export function SamSetupGate({
   errorMessage,
@@ -31,10 +32,10 @@ export function SamSetupGate({
             </p>
           ) : (
             <p>
-              SAM, OpenSEO&apos;s in-app AI agent, needs an OpenRouter API key.
-              Create a key on OpenRouter, set it as the{" "}
-              <code>OPENROUTER_API_KEY</code> environment variable, restart
-              OpenSEO, then confirm here.
+              SAM, the in-app AI agent, needs an OpenRouter API key. Create a
+              key on OpenRouter, set it as the <code>OPENROUTER_API_KEY</code>{" "}
+              environment variable, restart {BRAND.productName}, then confirm
+              here.
             </p>
           )}
           <p className="text-xs">

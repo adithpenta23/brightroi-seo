@@ -9,6 +9,7 @@ import { ONE_CLICK_INSTALLS } from "@/client/features/ai-mcp/agentInstalls";
 import { captureClientEvent } from "@/client/lib/posthog";
 import { dismissDashboardAgentCard } from "@/serverFunctions/dashboard";
 import { listMcpConnections } from "@/serverFunctions/mcp-connections";
+import { BRAND } from "@/shared/brand";
 
 const actionClassName = "h-9 px-3 text-xs sm:text-sm";
 
@@ -65,7 +66,7 @@ export function DashboardAgentPromptCard({
     ({ agent }) =>
       grants.length === 0 || grants.some((grant) => grant.webChat === agent),
   );
-  const prompt = `Use OpenSEO to audit ${domain ?? "my website"} and tell me the 3 most important next steps.`;
+  const prompt = `Use ${BRAND.productName} to audit ${domain ?? "my website"} and tell me the 3 most important next steps.`;
 
   return (
     <AgentCard

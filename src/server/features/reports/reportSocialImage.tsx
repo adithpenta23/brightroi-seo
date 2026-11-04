@@ -1,6 +1,7 @@
 import { ImageResponse } from "takumi-js/response";
 import { domainField } from "@/types/schemas/domain";
-import logo from "../../../public/android-chrome-192x192.png?inline";
+import logo from "../../../public/brand/icon-192.png?inline";
+import { BRAND } from "@/shared/brand";
 
 /** One template for all reports. Assets stay local; titles never go to an image service. */
 export async function renderReportSocialImage(
@@ -19,14 +20,14 @@ export async function renderReportSocialImage(
         display: "flex",
         flexDirection: "column",
         padding: 64,
-        backgroundColor: "#f5f4ef",
-        color: "#1d2925",
+        backgroundColor: "#f8fafc",
+        color: "#0b1220",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <img src={logo} width={64} height={64} style={{ borderRadius: 14 }} />
+        <img src={logo} width={64} height={64} />
         <div style={{ fontSize: 34, fontWeight: 600, letterSpacing: -1 }}>
-          OpenSEO
+          {BRAND.companyName}
         </div>
       </div>
       <div
@@ -58,7 +59,7 @@ export async function renderReportSocialImage(
             maxWidth: "80%",
             fontSize: 24,
             fontWeight: 400,
-            color: "#65716b",
+            color: "#475569",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",

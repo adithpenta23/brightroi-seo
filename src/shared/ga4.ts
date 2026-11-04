@@ -1,3 +1,5 @@
+import { BRAND } from "./brand";
+
 /** Better Auth provider ID for the dedicated Google Analytics grant. */
 export const GA4_OAUTH_PROVIDER_ID = "google-analytics";
 
@@ -11,5 +13,4 @@ export const GA4_OAUTH_SCOPES = [
   GA4_DATA_SCOPE,
 ] as const;
 
-export const GA4_SELF_HOSTED_SETUP_DOCS_URL =
-  "https://github.com/every-app/open-seo/blob/main/docs/SELF_HOSTING_GOOGLE_ANALYTICS.md";
+export const GA4_SELF_HOSTED_SETUP_DOCS_URL = `${BRAND.docsUrl}/SELF_HOSTING_GOOGLE_ANALYTICS.md`;

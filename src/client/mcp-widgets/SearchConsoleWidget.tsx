@@ -13,6 +13,7 @@ import {
   type WidgetSnapshot,
 } from "@/shared/mcp-contracts";
 import type { WidgetHost } from "./useWidgetHost";
+import { BRAND } from "@/shared/brand";
 
 enum View {
   Striking = "striking",
@@ -326,7 +327,7 @@ export function SearchConsoleWidget({
       )}
       {saved && (
         <p role="status" className="text-sm">
-          Keywords saved to OpenSEO.
+          Keywords saved to {BRAND.productName}.
         </p>
       )}
       {rows.length > 0 && (

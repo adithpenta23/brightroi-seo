@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/client/components/ui/card";
 import { PageHeader } from "@/client/components/PageHeader";
-import { ArrowUpRight, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import { getClientAuthMode } from "@/lib/auth-mode";
 import { captureClientEvent } from "@/client/lib/posthog";
 import {
@@ -27,14 +27,12 @@ import {
 } from "@/client/features/ai-mcp/agentSetupPrompt";
 import { CopyButton } from "@/client/components/CopyButton";
 import { AgentList } from "@/client/features/ai-mcp/AgentList";
-
-const DOCS_URL = "https://openseo.so/docs/agent-setup";
+import { BRAND } from "@/shared/brand";
 
 const COACH_DOCS_URL = "https://openseo.so/docs/skills/seo-coach";
 const LINK_CLASS =
   "text-foreground underline decoration-foreground/25 underline-offset-4 hover:decoration-foreground";
-const MUTED_LINK_CLASS =
-  "inline-flex items-center gap-1 text-sm text-muted-foreground underline decoration-foreground/25 underline-offset-4 hover:text-foreground";
+
 const SKILLS = [
   ["seo-coach", "Explains where you stand and picks your next step."],
   [
@@ -89,7 +87,7 @@ function AiPage() {
       <div className="mx-auto max-w-7xl">
         <PageHeader
           title="Agent setup"
-          description="The most powerful way to use OpenSEO is through the AI agent you already use. Set it up once, then ask it anything."
+          description={`The most powerful way to use ${BRAND.productName} is through the AI agent you already use. Set it up once, then ask it anything.`}
         />
 
         <Tabs
@@ -118,9 +116,9 @@ function AiPage() {
                         <h2>Set up your agent</h2>
                       </CardTitle>
                       <CardDescription>
-                        Paste the setup prompt into your agent to connect
-                        OpenSEO and install its SEO skills. It will guide you
-                        through any manual steps.
+                        Paste the setup prompt into your agent to connect{" "}
+                        {BRAND.productName} and install its SEO skills. It will
+                        guide you through any manual steps.
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -136,29 +134,13 @@ function AiPage() {
                             captureClientEvent("mcp:setup_prompt_copy")
                           }
                         />
-                        <a
-                          href={`${DOCS_URL}#set-up-your-agent`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={MUTED_LINK_CLASS}
-                        >
-                          Setup instructions
-                          <ArrowUpRight className="size-3.5" />
-                        </a>
                       </div>
                     </CardContent>
                     <CardFooter className="text-muted-foreground">
                       <p>
-                        Once connected, ask your agent to use{" "}
-                        <a
-                          href={COACH_DOCS_URL}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={LINK_CLASS}
-                        >
-                          SEO Coach
-                        </a>{" "}
-                        to help you choose what to do next.
+                        Once connected, ask your agent to use SEO Coach (
+                        <code>/seo-coach</code>) to help you choose what to do
+                        next.
                       </p>
                     </CardFooter>
                   </Card>
@@ -170,8 +152,8 @@ function AiPage() {
                       </CardTitle>
                       <CardDescription>
                         Already connected? Paste the update prompt into your
-                        agent to get the latest OpenSEO skills while preserving
-                        your connection settings and personal edits.
+                        agent to get the latest SEO skills while preserving your
+                        connection settings and personal edits.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -185,15 +167,6 @@ function AiPage() {
                           captureClientEvent("mcp:update_prompt_copy")
                         }
                       />
-                      <a
-                        href={`${DOCS_URL}#update-your-skills`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={MUTED_LINK_CLASS}
-                      >
-                        Update instructions
-                        <ArrowUpRight className="size-3.5" />
-                      </a>
                     </CardContent>
                   </Card>
                 </div>
@@ -248,14 +221,9 @@ function AiPage() {
                     key={name}
                     className="flex flex-col gap-0.5 sm:flex-row sm:gap-3"
                   >
-                    <a
-                      href={`https://openseo.so/docs/skills/${name}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={`shrink-0 font-mono text-[13px] sm:w-48 ${LINK_CLASS}`}
-                    >
+                    <code className="shrink-0 font-mono text-[13px] text-foreground sm:w-48">
                       /{name}
-                    </a>
+                    </code>
                     <span className="text-muted-foreground">{blurb}</span>
                   </li>
                 ))}

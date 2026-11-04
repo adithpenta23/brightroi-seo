@@ -3,6 +3,7 @@ import { Button } from "@/client/components/ui/button";
 import { safeHttpUrl } from "@/shared/safe-url";
 import type { SearchConsoleData } from "@/shared/mcp-contracts";
 import type { WidgetHost } from "./useWidgetHost";
+import { BRAND } from "@/shared/brand";
 
 export function SearchConsoleConnection({
   host,
@@ -28,9 +29,9 @@ export function SearchConsoleConnection({
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {setupUrl
-            ? "This self-hosted OpenSEO instance needs Google OAuth configuration before you can connect a property."
+            ? `This ${BRAND.productName} instance needs Google OAuth configuration before you can connect a property.`
             : connection
-              ? "Connect Google and choose a Search Console property in OpenSEO. Then return here and check the connection. Your Google sign-in stays in OpenSEO."
+              ? `Connect Google and choose a Search Console property in ${BRAND.productName}. Then return here and check the connection. Your Google sign-in stays in ${BRAND.productName}.`
               : host.snapshot?.text}
         </p>
       </div>
@@ -43,8 +44,8 @@ export function SearchConsoleConnection({
             {setupUrl
               ? "Setup instructions"
               : connection
-                ? "Connect in OpenSEO"
-                : "Check connection in OpenSEO"}
+                ? `Connect in ${BRAND.productName}`
+                : `Check connection in ${BRAND.productName}`}
             <ExternalLink />
           </Button>
         )}
@@ -63,7 +64,7 @@ export function SearchConsoleConnection({
           disabled={busy}
           onClick={() =>
             host.ask(
-              "Help me research Google search results for this OpenSEO project. Ask me which keyword and market to use first.",
+              `Help me research Google search results for this ${BRAND.productName} project. Ask me which keyword and market to use first.`,
               { projectId: input.projectId },
             )
           }

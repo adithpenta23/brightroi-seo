@@ -6,6 +6,7 @@ import { QueryError } from "@/client/components/QueryState";
 import { SkeletonPageContent } from "@/client/components/SkeletonPresets";
 import { Button } from "@/client/components/ui/button";
 import { useSamAccess } from "@/client/features/sam/useSamAccess";
+import { BRAND } from "@/shared/brand";
 
 /**
  * AI visibility setup researches the brand and suggests prompts through
@@ -48,8 +49,8 @@ export function OpenRouterKeyGate({
             </p>
             <p>
               Create a key on OpenRouter, set it as{" "}
-              <code>OPENROUTER_API_KEY</code>, restart OpenSEO, then confirm
-              here. The{" "}
+              <code>OPENROUTER_API_KEY</code>, restart {BRAND.productName}, then
+              confirm here. The{" "}
               <Link
                 className="underline underline-offset-2 hover:text-foreground"
                 to="/help/openrouter-api-key"

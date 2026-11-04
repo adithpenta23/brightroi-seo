@@ -10,6 +10,7 @@ import { normalizeAndValidateStartUrl } from "@/server/lib/audit/url-policy";
 import { RenderedPageService } from "@/server/lib/audit/rendered-page";
 import { getContextFetch } from "@/server/lib/provider-access";
 import type { RenderUsage } from "@/shared/audit-rendering";
+import { BRAND } from "@/shared/brand";
 
 const MAX_PAGES = 5;
 const PER_PAGE_CHAR_LIMIT = 4000;
@@ -17,7 +18,7 @@ const FETCH_TIMEOUT_MS = 10_000;
 // Covers chains like https://apex -> http://www -> https://www.
 const MAX_REDIRECTS = 3;
 const MAX_RESPONSE_BYTES = 2_000_000;
-const USER_AGENT = "OpenSEO-Onboarding/1.0 (+https://openseo.so)";
+const USER_AGENT = `BrightROI-Onboarding/1.0 (+${BRAND.websiteUrl})`;
 
 type ScrapedPage = {
   url: string;

@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/server";
 import { MCP_WIDGET_URI } from "@/shared/mcp-contracts";
+import { BRAND } from "@/shared/brand";
 
 export function registerWidgetResource(server: McpServer) {
   const meta = {
@@ -7,11 +8,10 @@ export function registerWidgetResource(server: McpServer) {
       prefersBorder: true,
       csp: { connectDomains: [], resourceDomains: [] },
     },
-    "openai/widgetDescription":
-      "OpenSEO Search Console performance and Google search results. Users can connect Search Console in OpenSEO, inspect results, and send a selection back to the conversation.",
+    "openai/widgetDescription": `${BRAND.productName} Search Console performance and Google search results. Users can connect Search Console in ${BRAND.productName}, inspect results, and send a selection back to the conversation.`,
   };
   server.registerResource(
-    "OpenSEO research",
+    `${BRAND.productName} research`,
     MCP_WIDGET_URI,
     { mimeType: "text/html;profile=mcp-app", _meta: meta },
     async () => {
