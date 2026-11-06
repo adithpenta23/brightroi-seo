@@ -340,6 +340,7 @@ function mapErrorToResult(
     (reason.code === "INSUFFICIENT_CREDITS" ||
       reason.code === "AI_SEARCH_BILLING_ISSUE" ||
       reason.code === "DATAFORSEO_AUTH_FAILED" ||
+      reason.code === "DATAFORSEO_NOT_CONNECTED" ||
       reason.code === "AUTH_CONFIG_MISSING")
   ) {
     // These account-level failures apply to every model, so surface one clear

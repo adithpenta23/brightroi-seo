@@ -48,6 +48,19 @@ describe("provider access with the deployment's own keys", () => {
     expect(await hasProviderAccess("context")).toBe(true);
   });
 
+  // The one sentence pages, rank checks and MCP answers show, and no request.
+  it("says DataForSEO is not connected when the key is empty", async () => {
+    Object.assign(workerEnv, { AUTH_MODE: "password" });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getDataforseoFetch()).rejects.toMatchObject({
+      code: "DATAFORSEO_NOT_CONNECTED",
+      message:
+        "DataForSEO is not connected yet. Add DATAFORSEO_API_KEY to activate this.",
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("has no Context.dev fetch without its key", async () => {
     workerEnv.AUTH_MODE = "local_noauth";
     expect(await getContextFetch()).toBeNull();

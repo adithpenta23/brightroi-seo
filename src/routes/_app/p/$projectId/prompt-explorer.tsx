@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PromptExplorerPage } from "@/client/features/ai-search/PromptExplorerPage";
 import { AiResearchSetupGate } from "@/client/features/ai-visibility/AiResearchSetupGate";
+import { DataforseoGate } from "@/client/features/dataforseo/DataforseoGate";
 import { aiResearchSetupQueryOptions } from "@/client/features/ai-visibility/shared";
 import { OpenRouterKeyGate } from "@/client/features/ai-visibility/OpenRouterKeyGate";
 import { ProjectWebsiteGate } from "@/client/features/projects/ProjectWebsiteGate";
@@ -42,34 +43,36 @@ function PromptExplorerRoute() {
   );
 
   return (
-    <div className="overflow-auto px-4 py-4 pb-24 md:px-6 md:py-6 md:pb-8">
-      <div className="mx-auto max-w-7xl space-y-5" key={projectId}>
-        <OpenRouterKeyGate projectId={projectId}>
-          <ProjectWebsiteGate projectId={projectId}>
-            <AiResearchSetupGate projectId={projectId}>
-              <PromptExplorerPage
-                projectId={projectId}
-                urlState={urlState}
-                onSubmit={(values) => {
-                  void navigate({
-                    search: {
-                      q: values.prompt,
-                      models: values.models,
-                      web: values.webSearch ? undefined : false,
-                      cc: values.webSearchCountryCode,
-                      hb: values.highlightBrand || undefined,
-                    },
-                    replace: true,
-                  });
-                }}
-                onClear={() => {
-                  void navigate({ search: {}, replace: true });
-                }}
-              />
-            </AiResearchSetupGate>
-          </ProjectWebsiteGate>
-        </OpenRouterKeyGate>
+    <DataforseoGate title="Prompt Explorer">
+      <div className="overflow-auto px-4 py-4 pb-24 md:px-6 md:py-6 md:pb-8">
+        <div className="mx-auto max-w-7xl space-y-5" key={projectId}>
+          <OpenRouterKeyGate projectId={projectId}>
+            <ProjectWebsiteGate projectId={projectId}>
+              <AiResearchSetupGate projectId={projectId}>
+                <PromptExplorerPage
+                  projectId={projectId}
+                  urlState={urlState}
+                  onSubmit={(values) => {
+                    void navigate({
+                      search: {
+                        q: values.prompt,
+                        models: values.models,
+                        web: values.webSearch ? undefined : false,
+                        cc: values.webSearchCountryCode,
+                        hb: values.highlightBrand || undefined,
+                      },
+                      replace: true,
+                    });
+                  }}
+                  onClear={() => {
+                    void navigate({ search: {}, replace: true });
+                  }}
+                />
+              </AiResearchSetupGate>
+            </ProjectWebsiteGate>
+          </OpenRouterKeyGate>
+        </div>
       </div>
-    </div>
+    </DataforseoGate>
   );
 }

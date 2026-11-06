@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BacklinksPage } from "@/client/features/backlinks/BacklinksPage";
+import { DataforseoGate } from "@/client/features/dataforseo/DataforseoGate";
 import {
   DEFAULT_BACKLINKS_PAGE_SIZE,
   backlinksSearchSchema,
@@ -28,21 +29,23 @@ function BacklinksRoute() {
   const scope = rawScope ?? defaultScopeForInput(target);
 
   return (
-    <BacklinksPage
-      projectId={projectId}
-      navigate={navigate}
-      searchState={{
-        target,
-        scope,
-        // Referring domains can't be filtered to a subfolder.
-        tab: scope === "subfolder" && tab === "domains" ? "backlinks" : tab,
-        page,
-        pageSize: size,
-        sort,
-        order,
-        view,
-        includeSpam,
-      }}
-    />
+    <DataforseoGate title="Backlinks">
+      <BacklinksPage
+        projectId={projectId}
+        navigate={navigate}
+        searchState={{
+          target,
+          scope,
+          // Referring domains can't be filtered to a subfolder.
+          tab: scope === "subfolder" && tab === "domains" ? "backlinks" : tab,
+          page,
+          pageSize: size,
+          sort,
+          order,
+          view,
+          includeSpam,
+        }}
+      />
+    </DataforseoGate>
   );
 }

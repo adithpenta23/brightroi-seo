@@ -17,6 +17,8 @@ import {
 import { Input } from "@/client/components/ui/input";
 import { InsufficientCreditsError } from "@/client/features/billing/InsufficientCreditsError";
 import { Switch } from "@/client/components/ui/switch";
+import { useDataforseoConnected } from "@/client/features/dataforseo/DataforseoGate";
+import { DATAFORSEO_NOT_CONNECTED_MESSAGE } from "@/shared/dataforseo-connection";
 import {
   clampMaxPagesInput,
   MIN_PAGES,
@@ -166,6 +168,8 @@ function LaunchOptions({
 }
 
 function LighthouseOptions({ launchForm }: Pick<Props, "launchForm">) {
+  // Lighthouse runs through DataForSEO: without a key every row would fail.
+  const dataforseoMissing = useDataforseoConnected() === false;
   return (
     <Field className="rounded-lg border border-border p-3">
       <div className="flex items-center gap-2">
@@ -173,7 +177,8 @@ function LighthouseOptions({ launchForm }: Pick<Props, "launchForm">) {
           {(field) => (
             <Switch
               id="audit-run-lighthouse"
-              checked={Boolean(field.state.value)}
+              checked={!dataforseoMissing && Boolean(field.state.value)}
+              disabled={dataforseoMissing}
               onCheckedChange={(checked) => field.handleChange(checked)}
             />
           )}
@@ -185,6 +190,9 @@ function LighthouseOptions({ launchForm }: Pick<Props, "launchForm">) {
           Include Lighthouse
         </FieldLabel>
       </div>
+      {dataforseoMissing ? (
+        <FieldDescription>{DATAFORSEO_NOT_CONNECTED_MESSAGE}</FieldDescription>
+      ) : null}
 
       <launchForm.Subscribe
         selector={(snapshot) => snapshot.values.runLighthouse}

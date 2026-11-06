@@ -6,6 +6,7 @@ import {
 import { isEveryAppAuthMode } from "@/lib/auth-mode";
 import { AppError } from "@/server/lib/errors";
 import { gatewayCallFor } from "@/server/lib/gateway-attribution";
+import { DATAFORSEO_NOT_CONNECTED_MESSAGE } from "@/shared/dataforseo-connection";
 import { DATAFORSEO_NOT_SET_UP_MESSAGE } from "@/shared/gateway-setup-messages";
 import {
   getOptionalEnvValue,
@@ -74,7 +75,15 @@ export async function getDataforseoFetch(): Promise<typeof fetch> {
     }
     return providerFetch;
   }
-  const apiKey = await getRequiredEnvValue("DATAFORSEO_API_KEY");
+  // Its only failure is an empty key. Answered before any network call, so a
+  // missing key costs nothing and reads the same everywhere: pages, stored
+  // rank-check errors and MCP answers.
+  const apiKey = await getRequiredEnvValue("DATAFORSEO_API_KEY").catch(() => {
+    throw new AppError(
+      "DATAFORSEO_NOT_CONNECTED",
+      DATAFORSEO_NOT_CONNECTED_MESSAGE,
+    );
+  });
   return withAuthorization(`Basic ${apiKey}`);
 }
 

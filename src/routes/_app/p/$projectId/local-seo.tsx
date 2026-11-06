@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, useParams } from "@tanstack/react-router";
 import { BackLink, PageHeader } from "@/client/components/PageHeader";
+import { MissingDataforseoNotice } from "@/client/features/dataforseo/DataforseoGate";
 import leafletCss from "leaflet/dist/leaflet.css?url";
 import localRankMapCss from "@/client/features/local-seo/local-rank-map.css?url";
 
@@ -28,6 +29,7 @@ function LocalSeoLayout() {
             ) : undefined
           }
         />
+        <MissingDataforseoNotice />
         <Outlet />
       </div>
     </div>

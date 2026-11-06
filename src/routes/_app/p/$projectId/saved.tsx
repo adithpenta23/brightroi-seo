@@ -24,6 +24,7 @@ import { TablePagination } from "@/client/components/table/TablePagination";
 import { SavedKeywordsBulkActionBar } from "@/client/features/saved-keywords/SavedKeywordsBulkActionBar";
 import { SavedKeywordsBulkTagsModal } from "@/client/features/saved-keywords/SavedKeywordsBulkTagsModal";
 import { SavedKeywordsFilters } from "@/client/features/saved-keywords/SavedKeywordsFilters";
+import { MissingDataforseoNotice } from "@/client/features/dataforseo/DataforseoGate";
 import { SavedKeywordsHeader } from "@/client/features/saved-keywords/SavedKeywordsHeader";
 import {
   DeleteSavedKeywordsModal,
@@ -319,6 +320,7 @@ function SavedKeywordsPage() {
           onExportSheets={() => void exporter.exportFiltered("sheets")}
           onRefreshMetrics={() => refreshMetricsMutation.mutate()}
         />
+        <MissingDataforseoNotice />
 
         {removeError ? (
           <RemoveSavedKeywordsError message={removeError} />

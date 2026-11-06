@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AiResearchSetupGate } from "@/client/features/ai-visibility/AiResearchSetupGate";
+import { MissingDataforseoNotice } from "@/client/features/dataforseo/DataforseoGate";
 import {
   aiResearchSetupQueryOptions,
   aiTrackerQueryOptions,
@@ -26,6 +27,7 @@ function AiVisibilityLayout() {
   return (
     <div className="overflow-auto px-4 py-4 pb-24 md:px-6 md:py-6 md:pb-8">
       <div className="mx-auto max-w-7xl space-y-5" key={projectId}>
+        <MissingDataforseoNotice />
         <OpenRouterKeyGate projectId={projectId}>
           <ProjectWebsiteGate projectId={projectId}>
             <AiResearchSetupGate projectId={projectId}>

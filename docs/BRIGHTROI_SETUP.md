@@ -101,8 +101,69 @@ Tested on a local installation with every API key empty.
 | SAM, the in-app AI assistant                                | Needs `OPENROUTER_API_KEY`                                                                               |
 
 Without the key, the app stops before contacting DataForSEO, so nothing is
-charged. Every page also shows a "Setup needed" banner and a DataForSEO pop-up
-until the key is set.
+charged. Each page that needs DataForSEO shows one notice: "DataForSEO is not
+connected yet. Add DATAFORSEO_API_KEY to activate this." Search pages show it
+instead of the search box; Rank Tracking, Local SEO, AI visibility and Saved
+Keywords show it above any data already saved. "Include Lighthouse" in Site
+Audit stays switched off until the key is set.
+
+## Add the DataForSEO key later
+
+Nothing about the key is built into the app, so adding it needs no rebuild:
+
+1. Put the key in `deploy/standalone/.env` after `DATAFORSEO_API_KEY=`. It is
+   the base64 of your DataForSEO `login:password`, not the dashboard password;
+   see [`DATAFORSEO_API_KEY.md`](./DATAFORSEO_API_KEY.md).
+2. Apply it with the recreate command from
+   [`SELF_HOSTING_DOCKER.md`](./SELF_HOSTING_DOCKER.md), keeping the build file
+   so your BrightROI image is used:
+
+   ```bash
+   docker compose -f deploy/standalone/compose.yaml -f deploy/standalone/compose.build.yaml up -d --force-recreate init web crawl-gateway
+   ```
+
+3. Reload the portal. The notices are gone, and the health check shows
+   `dataforseo` as `ok`:
+
+   ```bash
+   curl http://localhost:3001/api/health
+   ```
+
+The `init` step copies the key from `.env` into the app's settings and tells the
+running app to reload them; the app reads the key on every request. Projects,
+reports and accounts are untouched.
+
+## Demo data (developer version)
+
+`pnpm seed:demo` adds a demo client, "Demo Plumbing (demo)", with rank
+tracking history, a Local SEO map grid, a site audit, the BrightROI monthly
+template and a shared demo report. Everything is made up and labelled demo,
+nothing is charged, and it refuses to run when `NODE_ENV` is `production`. It
+fills the database of the developer version (`pnpm dev`), not the Docker portal:
+the Docker portal's database is replicated live, so it is never written to from
+outside the app.
+
+1. Run `corepack enable` once, so `pnpm` works.
+2. Create `.env.local` in the repository root (git-ignored) with:
+
+   ```
+   AUTH_MODE=local_noauth
+   PORT=3200
+   ```
+
+   Port 3200 keeps it clear of the Docker portal on 3001.
+
+3. Create the local database, add the demo and start the developer version:
+
+   ```bash
+   pnpm install
+   pnpm db:migrate:local
+   pnpm seed:demo
+   pnpm dev
+   ```
+
+4. Open <http://localhost:3200>. Running `pnpm seed:demo` again replaces the
+   demo client and leaves everything else alone.
 
 ## Client reports
 
@@ -215,6 +276,12 @@ Desktop. The renamed folders hold only empty files and are safe to keep.
 containers but not always `crawl-gateway`, which audits need. Run the start
 command from "Start, stop and check" (`up -d` without `--build`) after every
 restart; it starts whatever is missing.
+
+**A rebuild sits for more than 15 minutes.** A package download can stall.
+Stopping the command is not enough: a helper called `docker-buildx` keeps
+running and the next build joins the same stalled step. End `docker-buildx.exe`
+and `docker-compose.exe` in Task Manager, then run the build again. Your portal
+keeps running on the old version meanwhile.
 
 **502 Bad Gateway after a rebuild.** `up -d --build` replaces the app
 container but leaves the `web` proxy running, and the proxy keeps sending

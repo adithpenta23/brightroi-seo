@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BrandLookupPage } from "@/client/features/ai-search/BrandLookupPage";
+import { DataforseoGate } from "@/client/features/dataforseo/DataforseoGate";
 import { brandLookupSearchSchema } from "@/types/schemas/ai-search";
 
 export const Route = createFileRoute("/_app/p/$projectId/brand-lookup")({
@@ -16,28 +17,30 @@ function BrandLookupRoute() {
   const { q = "", c = [], scope } = Route.useSearch();
 
   return (
-    <BrandLookupPage
-      projectId={projectId}
-      initialQuery={q}
-      initialCompetitors={c}
-      initialScope={scope}
-      onSearchChange={(nextQuery, nextCompetitors, nextScope) => {
-        void navigate({
-          search: (prev) => ({
-            ...prev,
-            q: nextQuery.trim() || undefined,
-            // One serialization site: comma-join the competitor list.
-            c:
-              nextCompetitors.length > 0
-                ? nextCompetitors.join(",")
-                : undefined,
-            // The page passes a scope only when it differs from the default
-            // derived from `q`.
-            scope: nextScope,
-          }),
-          replace: true,
-        });
-      }}
-    />
+    <DataforseoGate title="Brand Lookup">
+      <BrandLookupPage
+        projectId={projectId}
+        initialQuery={q}
+        initialCompetitors={c}
+        initialScope={scope}
+        onSearchChange={(nextQuery, nextCompetitors, nextScope) => {
+          void navigate({
+            search: (prev) => ({
+              ...prev,
+              q: nextQuery.trim() || undefined,
+              // One serialization site: comma-join the competitor list.
+              c:
+                nextCompetitors.length > 0
+                  ? nextCompetitors.join(",")
+                  : undefined,
+              // The page passes a scope only when it differs from the default
+              // derived from `q`.
+              scope: nextScope,
+            }),
+            replace: true,
+          });
+        }}
+      />
+    </DataforseoGate>
   );
 }

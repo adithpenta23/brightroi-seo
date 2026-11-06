@@ -1,5 +1,6 @@
 import { FREE_MAX_AUDIT_PAGES } from "@/shared/audit-limits";
 import { GATEWAY_RENDERING_NOT_SET_UP_MESSAGE } from "@/shared/audit-rendering";
+import { DATAFORSEO_NOT_CONNECTED_MESSAGE } from "@/shared/dataforseo-connection";
 import { isErrorCode, type ErrorCode } from "@/shared/error-codes";
 import {
   isEveryAppClientAuthMode,
@@ -50,6 +51,7 @@ const STANDARD_MESSAGES: Record<ErrorCode, string> = {
   DATAFORSEO_AUTH_FAILED: isEveryAppClientAuthMode()
     ? "DataForSEO isn't set up on your Every App gateway yet, or rejected the key it holds. An owner or admin sets it with pnpm everyapp secret set DATAFORSEO_API_KEY."
     : "DataForSEO rejected the credentials. Check that DATAFORSEO_API_KEY is the base64 of your DataForSEO login:password, and that the DataForSEO account is verified and has API access.",
+  DATAFORSEO_NOT_CONNECTED: DATAFORSEO_NOT_CONNECTED_MESSAGE,
   RATE_LIMITED: "Too many requests. Please wait and try again.",
   UPSTREAM_UNAVAILABLE:
     "The data provider is temporarily unavailable. Please retry in a moment.",

@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, useParams } from "@tanstack/react-router";
 import { BackLink, PageHeader } from "@/client/components/PageHeader";
+import { MissingDataforseoNotice } from "@/client/features/dataforseo/DataforseoGate";
 
 export const Route = createFileRoute("/_app/p/$projectId/rank-tracking")({
   component: RankTrackingLayout,
@@ -24,6 +25,7 @@ function RankTrackingLayout() {
           }
         />
 
+        <MissingDataforseoNotice />
         <Outlet />
       </div>
     </div>

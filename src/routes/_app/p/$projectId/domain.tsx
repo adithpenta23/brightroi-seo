@@ -3,6 +3,7 @@ import {
   stripSearchParams,
   useNavigate,
 } from "@tanstack/react-router";
+import { DataforseoGate } from "@/client/features/dataforseo/DataforseoGate";
 import { DomainOverviewPage } from "@/client/features/domain/DomainOverviewPage";
 import {
   DEFAULT_DOMAIN_KEYWORDS_PAGE_SIZE,
@@ -54,16 +55,18 @@ function DomainOverviewRoute() {
   const routeState = getDomainRouteState(search, projectMarket);
 
   return (
-    <DomainOverviewPage
-      projectId={projectId}
-      onShowRecentSearches={() => {
-        void navigate({
-          search: () => ({}),
-          replace: true,
-        });
-      }}
-      navigate={navigate}
-      routeState={routeState}
-    />
+    <DataforseoGate title="Domain Overview">
+      <DomainOverviewPage
+        projectId={projectId}
+        onShowRecentSearches={() => {
+          void navigate({
+            search: () => ({}),
+            replace: true,
+          });
+        }}
+        navigate={navigate}
+        routeState={routeState}
+      />
+    </DataforseoGate>
   );
 }

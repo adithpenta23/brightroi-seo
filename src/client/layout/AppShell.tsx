@@ -19,6 +19,16 @@ import {
   SidebarTrigger,
 } from "@/client/components/ui/sidebar";
 import { BRAND } from "@/shared/brand";
+import {
+  isEveryAppClientAuthMode,
+  isHostedClientAuthMode,
+} from "@/lib/auth-mode";
+
+// BrightROI: on a self-hosted install each DataForSEO-powered section says the
+// key is missing (DataforseoGate), so the app-wide pop-up, which reopened on
+// every page, and the banner stay for hosted and Every App installs only.
+const announceMissingKeyAppWide = () =>
+  isHostedClientAuthMode() || isEveryAppClientAuthMode();
 
 export function AuthenticatedAppLayout({
   children,
@@ -92,7 +102,9 @@ export function AuthenticatedAppLayout({
     }
 
     if (!seoApiKeyStatusQuery.isSuccess) return;
-    setShowMissingSeoApiKeyModal(!seoApiKeyStatusQuery.data.configured);
+    setShowMissingSeoApiKeyModal(
+      announceMissingKeyAppWide() && !seoApiKeyStatusQuery.data.configured,
+    );
   }, [
     location.pathname,
     seoApiKeyStatusQuery.data,
@@ -102,6 +114,7 @@ export function AuthenticatedAppLayout({
   ]);
 
   const shouldShowSeoApiWarning =
+    announceMissingKeyAppWide() &&
     !seoApiKeyStatusError &&
     isSeoApiKeyConfigured === false &&
     !showMissingSeoApiKeyModal;
